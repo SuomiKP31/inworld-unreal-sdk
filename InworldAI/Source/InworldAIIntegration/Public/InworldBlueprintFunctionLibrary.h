@@ -116,8 +116,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inworld|Studio", meta = (AdvancedDisplay = "2", AutoCreateRefTerm = "StudioApiKeyOverride"))
 	static void GetInworldStudioScenes(const FOnInworldStudioScenes& Callback, const FString& Workspace, const FString& StudioApiKeyOverride);
 
+	DECLARE_DYNAMIC_DELEGATE_ThreeParams(FOnInworldStudioKnowledgeBase, const FInworldStudioKnowledgeBase&, Knowledge, bool, bSuccess, const FString&, Error);
 	UFUNCTION(BlueprintCallable, Category = "Inworld|Studio", meta = (AdvancedDisplay = "2", AutoCreateRefTerm = "StudioApiKeyOverride"))
-	static void GetInworldStudioScenes2(const FOnInworldStudioScenes& Callback, const FString& Workspace, const FString& StudioApiKeyOverride);
+	static void GetInworldStudioKnowledge(const FOnInworldStudioKnowledgeBase& Callback, const FString& Workspace, const FString& StudioApiKeyOverride);
+	
 	/**
 	 * Convert a SoundWave to a byte array.
 	 * @param SoundWave The SoundWave to convert.

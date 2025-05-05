@@ -246,3 +246,34 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Scene", meta = (DisplayName = "Scenes"))
 	TArray<FInworldStudioScene> scenes;
 };
+
+USTRUCT(BlueprintType)
+struct FInworldStudioKnowledgeRecord
+{
+	public:
+	GENERATED_BODY()
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Knowledge", meta = (DisplayName = "Knowledge"))
+	FString text;
+};
+
+USTRUCT(BlueprintType)
+struct FInworldStudioKnowledge
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadOnly, Category = "Scene", meta = (DisplayName = "Display Name"))
+	FString displayName;
+	UPROPERTY(BlueprintReadOnly, Category = "Character", meta = (DisplayName = "Characters"))
+	TArray<FInworldStudioCharacter> characters;
+	UPROPERTY(BlueprintReadOnly, Category = "Knowledge", meta = (DisplayName = "Knowledge Records"))
+	TArray<FInworldStudioKnowledgeRecord> knowledgeRecords;
+};
+
+USTRUCT(BlueprintType)
+struct FInworldStudioKnowledgeBase
+{
+	GENERATED_BODY()
+	UPROPERTY(BlueprintReadOnly, Category = "Knowledge", meta = (DisplayName = "Knowledges"))
+	TArray<FInworldStudioKnowledge> commonKnowledge;
+};

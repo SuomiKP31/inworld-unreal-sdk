@@ -137,12 +137,12 @@ void UInworldBlueprintFunctionLibrary::GetInworldStudioScenes(const FOnInworldSt
     GetInworldStudioResource<FInworldStudioScenes>(Callback, FString::Format(TEXT("https://{0}/studio/v1/workspaces/{1}/scenes"), { GetStudioApiUrl(), Workspace }), InworldStudioApiKey);
 }
 
-void UInworldBlueprintFunctionLibrary::GetInworldStudioScenes2(const FOnInworldStudioScenes& Callback,
-    const FString& Workspace, const FString& StudioApiKeyOverride)
+void UInworldBlueprintFunctionLibrary::GetInworldStudioKnowledge(const FOnInworldStudioKnowledgeBase& Callback, const FString& Workspace, const FString& StudioApiKeyOverride)
 {
     const FString InworldStudioApiKey = StudioApiKeyOverride.IsEmpty() ? GetStudioApiKey() : StudioApiKeyOverride;
-    GetInworldStudioResource<FInworldStudioScenes>(Callback, FString::Format(TEXT("https://{0}/studio/v1/workspaces/{1}/common-knowledge"), { GetStudioApiUrl(), Workspace }), InworldStudioApiKey);
+    GetInworldStudioResource<FInworldStudioKnowledgeBase>(Callback, FString::Format(TEXT("https://{0}/studio/v1/workspaces/{1}/common-knowledge"), { GetStudioApiUrl(), Workspace }), InworldStudioApiKey);
     // GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Format(TEXT("https://{0}/studio/v1/workspaces/{1}/common-knowledge"), { GetStudioApiUrl(), Workspace }));
+    // TODO: Filtering
 }
 
 
