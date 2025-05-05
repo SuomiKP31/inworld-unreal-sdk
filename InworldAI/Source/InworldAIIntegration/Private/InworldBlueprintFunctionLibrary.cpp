@@ -78,7 +78,11 @@ void GetInworldStudioResource(const U& Callback, const FString& URL, const FStri
         {
             const int32 ResponseCode = Response->GetResponseCode();
             const FString ResponseString = Response->GetContentAsString();
-
+            
+            UE_LOG(LogTemp, Log, TEXT("ResponseCode: %s"), *ResponseString);
+            FString FilePath = FPaths::ProjectDir() + TEXT("Response.txt");
+            FFileHelper::SaveStringToFile(ResponseString, *FilePath);
+            
             T Resource;
             bool bValid = false;
             FString Error;
@@ -132,6 +136,15 @@ void UInworldBlueprintFunctionLibrary::GetInworldStudioScenes(const FOnInworldSt
     const FString InworldStudioApiKey = StudioApiKeyOverride.IsEmpty() ? GetStudioApiKey() : StudioApiKeyOverride;
     GetInworldStudioResource<FInworldStudioScenes>(Callback, FString::Format(TEXT("https://{0}/studio/v1/workspaces/{1}/scenes"), { GetStudioApiUrl(), Workspace }), InworldStudioApiKey);
 }
+
+void UInworldBlueprintFunctionLibrary::GetInworldStudioScenes2(const FOnInworldStudioScenes& Callback,
+    const FString& Workspace, const FString& StudioApiKeyOverride)
+{
+    const FString InworldStudioApiKey = StudioApiKeyOverride.IsEmpty() ? GetStudioApiKey() : StudioApiKeyOverride;
+    GetInworldStudioResource<FInworldStudioScenes>(Callback, FString::Format(TEXT("https://{0}/studio/v1/workspaces/{1}/common-knowledge"), { GetStudioApiUrl(), Workspace }), InworldStudioApiKey);
+    // GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString::Format(TEXT("https://{0}/studio/v1/workspaces/{1}/common-knowledge"), { GetStudioApiUrl(), Workspace }));
+}
+
 
 bool UInworldBlueprintFunctionLibrary::SoundWaveToDataArray(USoundWave* SoundWave, TArray<uint8>& OutDataArray)
 {
