@@ -262,7 +262,9 @@ struct FInworldStudioKnowledge
 {
 	GENERATED_BODY()
 
-	UPROPERTY(BlueprintReadOnly, Category = "Scene", meta = (DisplayName = "Display Name"))
+	UPROPERTY(BlueprintReadOnly, Category = "Knowledge", meta = (DisplayName = "Name"))
+	FString name;
+	UPROPERTY(BlueprintReadOnly, Category = "Knowledge", meta = (DisplayName = "Display Name"))
 	FString displayName;
 	UPROPERTY(BlueprintReadOnly, Category = "Character", meta = (DisplayName = "Characters"))
 	TArray<FInworldStudioCharacter> characters;
@@ -276,4 +278,12 @@ struct FInworldStudioKnowledgeBase
 	GENERATED_BODY()
 	UPROPERTY(BlueprintReadOnly, Category = "Knowledge", meta = (DisplayName = "Knowledges"))
 	TArray<FInworldStudioKnowledge> commonKnowledge;
+};
+
+USTRUCT(BlueprintType)
+struct FInworldStudioKnowledgeNames
+{
+	GENERATED_BODY()
+	UPROPERTY(BlueprintReadOnly, Category = "Knowledge", meta = (DisplayName = "Knowledge Names"))
+	TArray<FString> commonKnowledge;
 };

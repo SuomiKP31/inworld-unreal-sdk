@@ -119,6 +119,10 @@ public:
 	DECLARE_DYNAMIC_DELEGATE_ThreeParams(FOnInworldStudioKnowledgeBase, const FInworldStudioKnowledgeBase&, Knowledge, bool, bSuccess, const FString&, Error);
 	UFUNCTION(BlueprintCallable, Category = "Inworld|Studio", meta = (AdvancedDisplay = "2", AutoCreateRefTerm = "StudioApiKeyOverride"))
 	static void GetInworldStudioKnowledge(const FOnInworldStudioKnowledgeBase& Callback, const FString& Workspace, const FString& StudioApiKeyOverride);
+
+	DECLARE_DYNAMIC_DELEGATE_ThreeParams(FOnInworldStudioCharacterKnowledge, const FInworldStudioKnowledgeNames&, Knowledge, bool, bSuccess, const FString&, Error);
+	UFUNCTION(BlueprintCallable, Category = "Inworld|Studio", meta = (AdvancedDisplay = "3", AutoCreateRefTerm = "StudioApiKeyOverride"))
+	static void GetInworldStudioCharacterKnowledge(const FOnInworldStudioCharacterKnowledge& Callback, const FString& Workspace,const FString& CharacterName, const FString& StudioApiKeyOverride);
 	
 	/**
 	 * Convert a SoundWave to a byte array.

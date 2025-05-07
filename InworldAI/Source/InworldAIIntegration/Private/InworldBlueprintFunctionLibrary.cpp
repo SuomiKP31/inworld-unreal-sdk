@@ -146,6 +146,13 @@ void UInworldBlueprintFunctionLibrary::GetInworldStudioKnowledge(const FOnInworl
 }
 
 
+void UInworldBlueprintFunctionLibrary::GetInworldStudioCharacterKnowledge(const FOnInworldStudioCharacterKnowledge& Callback,
+    const FString& Workspace, const FString& CharacterName, const FString& StudioApiKeyOverride)
+{
+    const FString InworldStudioApiKey = StudioApiKeyOverride.IsEmpty() ? GetStudioApiKey() : StudioApiKeyOverride;
+    GetInworldStudioResource<FInworldStudioKnowledgeNames>(Callback, FString::Format(TEXT("https://{0}/studio/v1/workspaces/{1}/characters/{2}"), { GetStudioApiUrl(), Workspace, CharacterName }), InworldStudioApiKey);
+}
+
 bool UInworldBlueprintFunctionLibrary::SoundWaveToDataArray(USoundWave* SoundWave, TArray<uint8>& OutDataArray)
 {
     //TODO: support other formats
