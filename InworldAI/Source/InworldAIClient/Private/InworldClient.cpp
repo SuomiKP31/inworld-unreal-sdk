@@ -34,6 +34,7 @@ THIRD_PARTY_INCLUDES_END
 
 #include "Misc/Paths.h"
 #include "Misc/App.h"
+#include "Misc/DateTime.h" 
 
 #include <string>
 #include <memory>
@@ -544,6 +545,36 @@ FInworldToken UInworldClient::GetSessionToken() const
 #endif
 }
 
+void UInworldClient::BindNDKLogCallbackToEvent()
+{
+#ifdef INWORLD_WITH_NDK
+	Inworld::ClearLogCallbacks();
+	DEFINE_LOG_CATEGORY_STATIC(LogInworldAINDK, Log, All);
+	Inworld::SetLogCallbacks(
+[](const char* message)
+	{
+		UE_LOG(LogInworldAINDK, Log, TEXT("%s"), UTF8_TO_TCHAR(message));
+#if !UE_BUILD_SHIPPING
+		FString Message = UTF8_TO_TCHAR(message);
+		CRUNativeLogParser(Message);
+#endif
+	},
+	[](const char* message)
+	{
+		UE_LOG(LogInworldAINDK, Warning, TEXT("%s"), UTF8_TO_TCHAR(message));
+	},
+	[](const char* message)
+	{
+		UE_LOG(LogInworldAINDK, Error, TEXT("%s"), UTF8_TO_TCHAR(message));
+	});
+	if (!GetCapabilities().LogsDebug)
+	{
+		UE_LOG(LogInworldAINDK, Warning, TEXT("NDK DEBUG: WARNING! This session did not enable debug logging capability! We will not capture the S2C logs unless you do so."));
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Orange, "NDK DEBUG: WARNING! This session did not enable debug logging capability! We will not capture the S2C logs unless you do so.");
+	}
+#endif
+}
+
 void UInworldClient::LoadPlayerProfile(const FInworldPlayerProfile& PlayerProfile)
 {
 	NO_CLIENT_RETURN(void())
@@ -981,6 +1012,41 @@ void UInworldClient::OnCVarsChanged()
 	}
 }
 #endif
+void UInworldClient::CRUNativeLogParser(FString& ndkMessage)
+{
+	// GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Purple, ndkMessage);
+	// When a dialog request is sent, we want to know what's happening under the hood...
+	if (ndkMessage.StartsWith("[DEBUG]: Requested to generate a dialog reply."))
+	{
+		ndkMessage = ndkMessage.Replace(TEXT("\\n"), TEXT("\n")).Replace(TEXT("\\u003c"), TEXT("<")).Replace(TEXT("\\u003e"), TEXT(">"));
+		
+
+		// Save the s2c debug prompt to a folder
+		FString SaveDirectory = FPaths::ProjectSavedDir();
+
+		// Name of the text file (just log it with time, maybe get the agent name later when we parse the file)
+		FDateTime CurrentDateTime = FDateTime::Now();
+		
+		FString FileName = FString::Printf(TEXT("NDKLogs/%04d%02d%02d-%02d%02d%02d%03d.txt"),
+		CurrentDateTime.GetYear(),
+		CurrentDateTime.GetMonth(),
+		CurrentDateTime.GetDay(),
+		CurrentDateTime.GetHour(),
+		CurrentDateTime.GetMinute(),
+		CurrentDateTime.GetSecond(),
+		CurrentDateTime.GetMillisecond());
+
+		// Full path to the text file
+		FString FilePath = FPaths::Combine(*SaveDirectory, *FileName);
+		// Convert the FString to a byte array
+		TArray<uint8> Data;
+		Data.Append((uint8*)TCHAR_TO_ANSI(*ndkMessage), ndkMessage.Len());
+
+		// Write the data to the text file
+		FFileHelper::SaveArrayToFile(Data, *FilePath);
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Purple, "Debug Prompt Saved as: " + FilePath);
+	}
+}
 #endif
 #endif
 

@@ -79,7 +79,6 @@ void GetInworldStudioResource(const U& Callback, const FString& URL, const FStri
             const int32 ResponseCode = Response->GetResponseCode();
             const FString ResponseString = Response->GetContentAsString();
             
-            UE_LOG(LogTemp, Log, TEXT("ResponseCode: %s"), *ResponseString);
             FString FilePath = FPaths::ProjectDir() + TEXT("Response.txt");
             FFileHelper::SaveStringToFile(ResponseString, *FilePath);
             
@@ -227,4 +226,41 @@ USoundWave* UInworldBlueprintFunctionLibrary::DataArrayToSoundWave(const TArray<
     FMemory::Memcpy(SoundWave->RawPCMData, WaveInfo.SampleDataStart, WaveInfo.SampleDataSize);
 
     return SoundWave;
+}
+
+FString UInworldBlueprintFunctionLibrary::LoadStringFromFile(FString Path)
+{
+    FString Content;
+    if (IFileManager::Get().FileExists(*Path))
+    {
+        FFileHelper::LoadFileToString(Content, *(Path));
+    }
+    return Content;
+}
+
+TArray<FString> UInworldBlueprintFunctionLibrary::GetNDKLogEntries()
+{
+    FString ndkLogPath = FPaths::Combine(FPaths::ProjectSavedDir(), "NDKLogs");
+    TArray<FString> LogFiles;
+    // Get all files in the directory
+    IFileManager& FileManager = IFileManager::Get();
+    if (FileManager.DirectoryExists(*ndkLogPath))
+    {
+        // Find all files with .txt extension in the directory
+        TArray<FString> FoundFiles;
+        FileManager.FindFiles(FoundFiles, *ndkLogPath, TEXT("*.txt"));
+
+        // Append the full file paths to the LogFiles array
+        for (const FString& FileName : FoundFiles)
+        {
+            FString FilePath = FPaths::Combine(ndkLogPath, FileName);
+            LogFiles.Add(FilePath);
+        }
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("NDKLogs directory not found"));
+    }
+
+    return LogFiles;
 }

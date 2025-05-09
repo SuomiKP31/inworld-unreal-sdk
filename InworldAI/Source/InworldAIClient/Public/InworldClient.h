@@ -121,6 +121,14 @@ public:
 	*/
 	UFUNCTION(BlueprintPure, Category = "Session")
 	FInworldToken GetSessionToken() const;
+	
+	/**
+	* Added for CRU by Shin. Rebind the NDK Debug callbacks so that we can save the S2C logs to the client.
+	* Only works when the NDK is present, and the session has "Log Debug" Capability enabled.
+	* It will save non-error messages from the NDK to a folder named "NDKLogs" in your game saves folder.
+	*/
+	UFUNCTION(BlueprintCallable, Category = "Inworld|Debug(CRU)")
+	void BindNDKLogCallbackToEvent();
 
 	/**
 	* Load the Player Profile.
@@ -403,6 +411,7 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Connection")
 	FOnInworldPerceivedLatency OnPerceivedLatencyDelegate;
 	FOnInworldPerceivedLatencyNative& OnPerceivedLatency() { return OnPerceivedLatencyDelegateNative; }
+	
 
 private:
 	FOnInworldSessionPrePauseNative OnPrePauseDelegateNative;
@@ -422,6 +431,7 @@ private:
 	static FAutoConsoleVariableSink CVarSink;
 	static void OnCVarsChanged();
 #endif
+	static void CRUNativeLogParser(FString& ndkMessage);
 #endif
 #endif
 

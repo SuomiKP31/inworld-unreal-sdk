@@ -116,10 +116,22 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inworld|Studio", meta = (AdvancedDisplay = "2", AutoCreateRefTerm = "StudioApiKeyOverride"))
 	static void GetInworldStudioScenes(const FOnInworldStudioScenes& Callback, const FString& Workspace, const FString& StudioApiKeyOverride);
 
+	/**
+	 * Get Inworld Studio Knowledge Base.
+	 * @param Callback The delegate to be called upon completion.
+	 * @param Workspace The workspace for which to retrieve the scenes.
+	 * @param StudioApiKeyOverride The optional Studio API key override.
+	 */
 	DECLARE_DYNAMIC_DELEGATE_ThreeParams(FOnInworldStudioKnowledgeBase, const FInworldStudioKnowledgeBase&, Knowledge, bool, bSuccess, const FString&, Error);
 	UFUNCTION(BlueprintCallable, Category = "Inworld|Studio", meta = (AdvancedDisplay = "2", AutoCreateRefTerm = "StudioApiKeyOverride"))
 	static void GetInworldStudioKnowledge(const FOnInworldStudioKnowledgeBase& Callback, const FString& Workspace, const FString& StudioApiKeyOverride);
 
+	/**
+	 * Get common knowledge entries associated with a character. Note that this does not include any mutations.
+	 * @param Callback The delegate to be called upon completion.
+	 * @param Workspace The workspace for which to retrieve the scenes.
+	 * @param StudioApiKeyOverride The optional Studio API key override.
+	 */
 	DECLARE_DYNAMIC_DELEGATE_ThreeParams(FOnInworldStudioCharacterKnowledge, const FInworldStudioKnowledgeNames&, Knowledge, bool, bSuccess, const FString&, Error);
 	UFUNCTION(BlueprintCallable, Category = "Inworld|Studio", meta = (AdvancedDisplay = "3", AutoCreateRefTerm = "StudioApiKeyOverride"))
 	static void GetInworldStudioCharacterKnowledge(const FOnInworldStudioCharacterKnowledge& Callback, const FString& Workspace,const FString& CharacterName, const FString& StudioApiKeyOverride);
@@ -140,4 +152,10 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Inworld|Audio")
 	static USoundWave* DataArrayToSoundWave(const TArray<uint8>& DataArray);
+
+	UFUNCTION(BlueprintCallable, Category = "Inworld|Debug(CRU)")
+	static FString LoadStringFromFile(FString Path);
+
+	UFUNCTION(BlueprintCallable, Category = "Inworld|Debug(CRU)")
+	static TArray<FString> GetNDKLogEntries();
 };
